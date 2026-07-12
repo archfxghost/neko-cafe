@@ -1,22 +1,28 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Neko-Cafe Pro</title>
     <style>
-        body { background: #121212; color: #ff69b4; font-family: monospace; text-align: center; }
-        .game-box { border: 2px solid #ff69b4; padding: 20px; width: 80%; margin: auto; }
-        button { background: #333; color: #fff; border: 1px solid #ff69b4; margin: 5px; padding: 10px; cursor: pointer; }
+        body { background: #121212; color: #ff69b4; font-family: monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .game-box { border: 2px solid #ff69b4; padding: 20px; width: 90%; max-width: 400px; text-align: center; background: #1e1e1e; }
+        button { background: #333; color: #fff; border: 1px solid #ff69b4; margin: 10px; padding: 15px; width: 80%; cursor: pointer; font-size: 16px; }
     </style>
 </head>
 <body>
     <div class="game-box">
         <h1>🐾 NEKO-CAFE PRO 🐾</h1>
+        <pre id="cat-art">
+  |\---/|
+  | o_o |
+   \_^_/
+        </pre>
         <p id="stats">Cash: $5 | Bond: 0/10 | Tricks: 0</p>
-        <p id="message">Welcome to the cafe, Evelyn!</p>
+        <p id="message">Welcome, Evelyn!</p>
         <button onclick="serve()">Serve Coffee</button>
         <button onclick="bond()">Bond with Neko</button>
         <button onclick="trick()">Teach Trick</button>
-        <button onclick="show()">Performance</button>
+        <button onclick="perform()">Performance</button>
     </div>
 
     <script>
@@ -25,9 +31,9 @@
             document.getElementById('stats').innerText = `Cash: $${cash} | Bond: ${bond}/10 | Tricks: ${tricks}`;
         }
         function serve() { cash += 2; document.getElementById('message').innerText = "Coffee served! +$2"; update(); }
-        function bond() { if(cash > 0) { cash--; bond++; document.getElementById('message').innerText = "Bond increased!"; } update(); }
-        function trick() { if(bond >= 2) { bond-=2; tricks++; document.getElementById('message').innerText = "New trick learned!"; } update(); }
-        function show() { if(tricks > 0) { cash += (tricks * 5); document.getElementById('message').innerText = "Show time! Earned $" + (tricks * 5); } update(); }
+        function bond() { if(cash > 0) { cash--; bond = Math.min(bond + 1, 10); document.getElementById('message').innerText = "Bond increased!"; } else { document.getElementById('message').innerText = "Broke! Serve coffee!"; } update(); }
+        function trick() { if(bond >= 2) { bond -= 2; tricks++; document.getElementById('message').innerText = "New trick learned!"; } else { document.getElementById('message').innerText = "Need 2 Bond!"; } update(); }
+        function perform() { if(tricks > 0) { cash += (tricks * 5); document.getElementById('message').innerText = "Show time! Earned $" + (tricks * 5); } else { document.getElementById('message').innerText = "No tricks!"; } update(); }
     </script>
 </body>
 </html>
