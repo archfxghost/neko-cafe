@@ -7,7 +7,7 @@
         body { background: #121212; color: #ff69b4; font-family: monospace; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
         .game-box { border: 2px solid #ff69b4; padding: 20px; width: 90%; max-width: 400px; text-align: center; background: #1e1e1e; margin-bottom: 20px; }
         .rules-box { border: 1px dashed #ff69b4; padding: 15px; width: 90%; max-width: 400px; color: #aaa; font-size: 12px; text-align: left; }
-        button { background: #333; color: #fff; border: 1px solid #ff69b4; margin: 5px; padding: 10px; width: 80%; cursor: pointer; }
+        button { background: #333; color: #fff; border: 1px solid #ff69b4; margin: 5px; padding: 15px; width: 80%; cursor: pointer; font-size: 16px; touch-action: manipulation; }
         #cat-art { font-size: 14px; white-space: pre; }
     </style>
 </head>
@@ -36,20 +36,9 @@
 
     <script>
         let cash = 5, bond = 0, tricks = 0;
-        
-        // Pre-loaded audio object for mobile reliability
         const clickSound = new Audio('https://actions.google.com/sounds/v1/ui/button_toggle.ogg');
         
-        const playClick = () => {
-            clickSound.currentTime = 0;
-            clickSound.play().catch(()=>{}); 
-        };
-
-        const catArt = {
-            happy: "  |\\---/|\n  | ^_^ |\n   \\_^_/",
-            excited: "  |\\---/|\n  | O_O |\n   \\_^_/",
-            default: "  |\\---/|\n  | o_o |\n   \\_^_/"
-        };
+        const play = () => { clickSound.currentTime = 0; clickSound.play().catch(()=>{}); };
 
         const update = () => {
             if (tricks >= 10) {
@@ -57,17 +46,20 @@
                 return;
             }
             document.getElementById('stats').innerText = `Cash: $${cash} | Bond: ${bond}/10 | Tricks: ${tricks}`;
-            
-            const artElement = document.getElementById('cat-art');
-            if (bond >= 8) artElement.innerText = catArt.happy;
-            else if (bond > 0) artElement.innerText = catArt.excited;
-            else artElement.innerText = catArt.default;
+            const art = document.getElementById('cat-art');
+            if (bond >= 8) art.innerText = "  |\\---/|\n  | ^_^ |\n   \\_^_/";
+            else if (bond > 0) art.innerText = "  |\\---/|\n  | O_O |\n   \\_^_/";
+            else art.innerText = "  |\\---/|\n  | o_o |\n   \\_^_/";
         };
 
-        document.getElementById('btnServe').addEventListener('click', () => { playClick(); cash += 2; update(); });
-        document.getElementById('btnBond').addEventListener('click', () => { playClick(); if(cash > 0) { cash--; bond = Math.min(bond + 1, 10); } update(); });
-        document.getElementById('btnTrick').addEventListener('click', () => { playClick(); if(bond >= 2) { bond -= 2; tricks++; } update(); });
-        document.getElementById('btnPerform').addEventListener('click', () => { playClick(); if(tricks > 0) { cash += (tricks * 5); } update(); });
+        const setupBtn = (id, action) => {
+            document.getElementById(id).addEventListener('touchstart', (e) => { e.preventDefault(); play(); action(); update(); }, {passive: false});
+        };
+
+        setupBtn('btnServe', () => { cash += 2; });
+        setupBtn('btnBond', () => { if(cash > 0) { cash--; bond = Math.min(bond + 1, 10); } });
+        setupBtn('btnTrick', () => { if(bond >= 2) { bond -= 2; tricks++; } });
+        setupBtn('btnPerform', () => { if(tricks > 0) { cash += (tricks * 5); } });
     </script>
 </body>
 </html>
