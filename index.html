@@ -6,7 +6,7 @@
     <style>
         body { background: #121212; color: #ff69b4; font-family: monospace; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
         .game-box { border: 2px solid #ff69b4; padding: 20px; width: 90%; max-width: 400px; text-align: center; background: #1e1e1e; margin-bottom: 20px; }
-        .rules-box { border: 1px dashed #ff69b4; padding: 15px; width: 90%; max-width: 400px; color: #aaa; font-size: 12px; }
+        .rules-box { border: 1px dashed #ff69b4; padding: 15px; width: 90%; max-width: 400px; color: #aaa; font-size: 12px; text-align: left; }
         button { background: #333; color: #fff; border: 1px solid #ff69b4; margin: 5px; padding: 10px; width: 80%; cursor: pointer; }
         #cat-art { font-size: 14px; white-space: pre; }
     </style>
@@ -37,15 +37,18 @@
     <script>
         let cash = 5, bond = 0, tricks = 0;
         
+        // Pre-loaded audio object for mobile reliability
+        const clickSound = new Audio('https://actions.google.com/sounds/v1/ui/button_toggle.ogg');
+        
+        const playClick = () => {
+            clickSound.currentTime = 0;
+            clickSound.play().catch(()=>{}); 
+        };
+
         const catArt = {
             happy: "  |\\---/|\n  | ^_^ |\n   \\_^_/",
             excited: "  |\\---/|\n  | O_O |\n   \\_^_/",
             default: "  |\\---/|\n  | o_o |\n   \\_^_/"
-        };
-
-        const playClick = () => {
-            const audio = new Audio('https://actions.google.com/sounds/v1/ui/button_toggle.ogg');
-            audio.play().catch(()=>{}); 
         };
 
         const update = () => {
