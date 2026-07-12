@@ -29,44 +29,34 @@
     <script>
         let cash = 5, bond = 0, tricks = 0;
         
-        const catArt = {
-            happy: "  |\\---/|\n  | ^_^ |\n   \\_^_/",
-            excited: "  |\\---/|\n  | O_O |\n   \\_^_/",
-            default: "  |\\---/|\n  | o_o |\n   \\_^_/"
-        };
-
+        // Sound check: Using a reliable short beep for mobile
         const playClick = () => {
             const audio = new Audio('https://actions.google.com/sounds/v1/ui/button_toggle.ogg');
-            audio.play().catch(() => {});
+            audio.play().catch(e => console.log("Audio waiting for first interaction"));
         };
 
         const update = () => {
+            // End Goal Check: Market Maker Mastery
+            if (tricks >= 10) {
+                document.getElementById('message').innerText = "🏆 MASTERY ACHIEVED: You are the Neko Market Maker!";
+                return;
+            }
+
             document.getElementById('stats').innerText = `Cash: $${cash} | Bond: ${bond}/10 | Tricks: ${tricks}`;
             
             if (bond >= 8) {
-                document.getElementById('cat-art').innerText = catArt.happy;
+                document.getElementById('cat-art').innerText = "  |\\---/|\n  | ^_^ |\n   \\_^_/";
             } else if (bond > 0) {
-                document.getElementById('cat-art').innerText = catArt.excited;
+                document.getElementById('cat-art').innerText = "  |\\---/|\n  | O_O |\n   \\_^_/";
             } else {
-                document.getElementById('cat-art').innerText = catArt.default;
+                document.getElementById('cat-art').innerText = "  |\\---/|\n  | o_o |\n   \\_^_/";
             }
         };
 
-        document.getElementById('btnServe').addEventListener('click', () => { 
-            playClick(); cash += 2; document.getElementById('message').innerText = "Coffee served! +$2"; update(); 
-        });
-        document.getElementById('btnBond').addEventListener('click', () => { 
-            playClick(); if(cash > 0) { cash--; bond = Math.min(bond + 1, 10); document.getElementById('message').innerText = "Bond increased!"; } 
-            else { document.getElementById('message').innerText = "Broke! Serve coffee!"; } update(); 
-        });
-        document.getElementById('btnTrick').addEventListener('click', () => { 
-            playClick(); if(bond >= 2) { bond -= 2; tricks++; document.getElementById('message').innerText = "New trick learned!"; } 
-            else { document.getElementById('message').innerText = "Need 2 Bond!"; } update(); 
-        });
-        document.getElementById('btnPerform').addEventListener('click', () => { 
-            playClick(); if(tricks > 0) { cash += (tricks * 5); document.getElementById('message').innerText = "Show time! Earned $" + (tricks * 5); } 
-            else { document.getElementById('message').innerText = "No tricks!"; } update(); 
-        });
+        document.getElementById('btnServe').addEventListener('click', () => { playClick(); cash += 2; update(); });
+        document.getElementById('btnBond').addEventListener('click', () => { playClick(); if(cash > 0) { cash--; bond = Math.min(bond + 1, 10); } update(); });
+        document.getElementById('btnTrick').addEventListener('click', () => { playClick(); if(bond >= 2) { bond -= 2; tricks++; } update(); });
+        document.getElementById('btnPerform').addEventListener('click', () => { playClick(); if(tricks > 0) { cash += (tricks * 5); } update(); });
     </script>
 </body>
 </html>
