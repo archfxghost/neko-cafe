@@ -19,21 +19,36 @@
         </pre>
         <p id="stats">Cash: $5 | Bond: 0/10 | Tricks: 0</p>
         <p id="message">Welcome, Evelyn!</p>
-        <button onclick="serve()">Serve Coffee</button>
-        <button onclick="bond()">Bond with Neko</button>
-        <button onclick="trick()">Teach Trick</button>
-        <button onclick="perform()">Performance</button>
+        <button id="btnServe">Serve Coffee</button>
+        <button id="btnBond">Bond with Neko</button>
+        <button id="btnTrick">Teach Trick</button>
+        <button id="btnPerform">Performance</button>
     </div>
 
     <script>
         let cash = 5, bond = 0, tricks = 0;
-        function update() {
+        const update = () => {
             document.getElementById('stats').innerText = `Cash: $${cash} | Bond: ${bond}/10 | Tricks: ${tricks}`;
-        }
-        function serve() { cash += 2; document.getElementById('message').innerText = "Coffee served! +$2"; update(); }
-        function bond() { if(cash > 0) { cash--; bond = Math.min(bond + 1, 10); document.getElementById('message').innerText = "Bond increased!"; } else { document.getElementById('message').innerText = "Broke! Serve coffee!"; } update(); }
-        function trick() { if(bond >= 2) { bond -= 2; tricks++; document.getElementById('message').innerText = "New trick learned!"; } else { document.getElementById('message').innerText = "Need 2 Bond!"; } update(); }
-        function perform() { if(tricks > 0) { cash += (tricks * 5); document.getElementById('message').innerText = "Show time! Earned $" + (tricks * 5); } else { document.getElementById('message').innerText = "No tricks!"; } update(); }
+        };
+
+        document.getElementById('btnServe').addEventListener('click', () => { 
+            cash += 2; document.getElementById('message').innerText = "Coffee served! +$2"; update(); 
+        });
+
+        document.getElementById('btnBond').addEventListener('click', () => { 
+            if(cash > 0) { cash--; bond = Math.min(bond + 1, 10); document.getElementById('message').innerText = "Bond increased!"; } 
+            else { document.getElementById('message').innerText = "Broke! Serve coffee!"; } update(); 
+        });
+
+        document.getElementById('btnTrick').addEventListener('click', () => { 
+            if(bond >= 2) { bond -= 2; tricks++; document.getElementById('message').innerText = "New trick learned!"; } 
+            else { document.getElementById('message').innerText = "Need 2 Bond!"; } update(); 
+        });
+
+        document.getElementById('btnPerform').addEventListener('click', () => { 
+            if(tricks > 0) { cash += (tricks * 5); document.getElementById('message').innerText = "Show time! Earned $" + (tricks * 5); } 
+            else { document.getElementById('message').innerText = "No tricks!"; } update(); 
+        });
     </script>
 </body>
 </html>
