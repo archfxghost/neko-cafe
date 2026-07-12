@@ -4,55 +4,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Neko-Cafe Pro</title>
     <style>
-        body { background: #121212; color: #ff69b4; font-family: monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .game-box { border: 2px solid #ff69b4; padding: 20px; width: 90%; max-width: 400px; text-align: center; background: #1e1e1e; }
-        button { background: #333; color: #fff; border: 1px solid #ff69b4; margin: 10px; padding: 15px; width: 80%; cursor: pointer; font-size: 16px; }
+        body { background: #121212; color: #ff69b4; font-family: monospace; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
+        .game-box { border: 2px solid #ff69b4; padding: 20px; width: 90%; max-width: 400px; text-align: center; background: #1e1e1e; margin-bottom: 20px; }
+        .rules-box { border: 1px dashed #ff69b4; padding: 15px; width: 90%; max-width: 400px; color: #aaa; font-size: 12px; }
+        button { background: #333; color: #fff; border: 1px solid #ff69b4; margin: 5px; padding: 10px; width: 80%; cursor: pointer; }
         #cat-art { font-size: 14px; white-space: pre; }
     </style>
 </head>
 <body>
     <div class="game-box">
         <h1>🐾 NEKO-CAFE PRO 🐾</h1>
-        <pre id="cat-art">
-  |\---/|
+        <pre id="cat-art">  |\---/|
   | o_o |
-   \_^_/
-        </pre>
+   \_^_/</pre>
         <p id="stats">Cash: $5 | Bond: 0/10 | Tricks: 0</p>
-        <p id="message">Welcome, Evelyn!</p>
+        <p id="message">Welcome, Architect!</p>
         <button id="btnServe">Serve Coffee</button>
         <button id="btnBond">Bond with Neko</button>
         <button id="btnTrick">Teach Trick</button>
         <button id="btnPerform">Performance</button>
     </div>
 
+    <div class="rules-box">
+        <h3>How to Play:</h3>
+        * Serve Coffee to earn cash.<br>
+        * Use cash to build Bond.<br>
+        * Spend 2 Bond to Teach a Trick.<br>
+        * Perform to earn big cash.<br>
+        * <b>Goal: Teach 10 Tricks to win!</b>
+    </div>
+
     <script>
         let cash = 5, bond = 0, tricks = 0;
-        
-        // Sound check: Using a reliable short beep for mobile
-        const playClick = () => {
-            const audio = new Audio('https://actions.google.com/sounds/v1/ui/button_toggle.ogg');
-            audio.play().catch(e => console.log("Audio waiting for first interaction"));
-        };
-
+        const playClick = () => { new Audio('https://actions.google.com/sounds/v1/ui/button_toggle.ogg').play().catch(()=>{}); };
         const update = () => {
-            // End Goal Check: Market Maker Mastery
             if (tricks >= 10) {
                 document.getElementById('message').innerText = "🏆 MASTERY ACHIEVED: You are the Neko Market Maker!";
                 return;
             }
-
             document.getElementById('stats').innerText = `Cash: $${cash} | Bond: ${bond}/10 | Tricks: ${tricks}`;
-            
-            if (bond >= 8) {
-                document.getElementById('cat-art').innerText = "  |\\---/|\n  | ^_^ |\n   \\_^_/";
-            } else if (bond > 0) {
-                document.getElementById('cat-art').innerText = "  |\\---/|\n  | O_O |\n   \\_^_/";
-            } else {
-                document.getElementById('cat-art').innerText = "  |\\---/|\n  | o_o |\n   \\_^_/";
-            }
+            if (bond >= 8) document.getElementById('cat-art').innerText = "  |\\---/|\n  | ^_^ |\n   \\_^_/";
+            else if (bond > 0) document.getElementById('cat-art').innerText = "  |\\---/|\n  | O_O |\n   \\_^_/";
+            else document.getElementById('cat-art').innerText = "  |\\---/|\n  | o_o |\n   \\_^_/";
         };
-
         document.getElementById('btnServe').addEventListener('click', () => { playClick(); cash += 2; update(); });
         document.getElementById('btnBond').addEventListener('click', () => { playClick(); if(cash > 0) { cash--; bond = Math.min(bond + 1, 10); } update(); });
         document.getElementById('btnTrick').addEventListener('click', () => { playClick(); if(bond >= 2) { bond -= 2; tricks++; } update(); });
