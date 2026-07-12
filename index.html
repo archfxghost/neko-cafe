@@ -1,14 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Neko-Cafe Pro</title>
     <style>
         body { background: #121212; color: #ff69b4; font-family: monospace; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
         .game-box { border: 2px solid #ff69b4; padding: 20px; width: 90%; max-width: 400px; text-align: center; background: #1e1e1e; margin-bottom: 20px; }
-        .rules-box { border: 1px dashed #ff69b4; padding: 15px; width: 90%; max-width: 400px; color: #aaa; font-size: 12px; text-align: left; }
-        button { background: #333; color: #fff; border: 2px solid #ff69b4; margin: 8px; padding: 20px; width: 90%; cursor: pointer; font-size: 18px; font-weight: bold; }
-        #cat-art { font-size: 16px; white-space: pre; margin: 10px 0; }
+        .rules-box { border: 1px dashed #ff69b4; padding: 15px; width: 90%; max-width: 400px; color: #aaa; font-size: 12px; }
+        
+        /* Button Styles with "Click" Effect */
+        button { 
+            background: #333; 
+            color: #fff; 
+            border: 1px solid #ff69b4; 
+            margin: 8px; 
+            padding: 15px; 
+            width: 85%; 
+            cursor: pointer; 
+            transition: transform 0.1s, background 0.1s;
+        }
+        button:active { 
+            background: #ff69b4; 
+            color: #121212; 
+            transform: scale(0.95); 
+        }
+
+        #cat-art { font-size: 14px; white-space: pre; margin: 10px 0; }
     </style>
 </head>
 <body>
@@ -36,10 +53,17 @@
 
     <script>
         let cash = 5, bond = 0, tricks = 0;
-        const audio = new Audio('https://actions.google.com/sounds/v1/ui/button_toggle.ogg');
+        
+        const catArt = {
+            happy: "  |\\---/|\n  | ^_^ |\n   \\_^_/",
+            excited: "  |\\---/|\n  | O_O |\n   \\_^_/",
+            default: "  |\\---/|\n  | o_o |\n   \\_^_/"
+        };
 
-        // Global Unlocker: The first interaction anywhere on the screen unlocks audio
-        document.body.addEventListener('click', () => { audio.play().then(()=>{}).catch(()=>{}); }, { once: true });
+        const playClick = () => {
+            const audio = new Audio('https://actions.google.com/sounds/v1/ui/button_toggle.ogg');
+            audio.play().catch(()=>{}); 
+        };
 
         const update = () => {
             if (tricks >= 10) {
@@ -47,23 +71,17 @@
                 return;
             }
             document.getElementById('stats').innerText = `Cash: $${cash} | Bond: ${bond}/10 | Tricks: ${tricks}`;
-            const art = document.getElementById('cat-art');
-            if (bond >= 8) art.innerText = "  |\\---/|\n  | ^_^ |\n   \\_^_/";
-            else if (bond > 0) art.innerText = "  |\\---/|\n  | O_O |\n   \\_^_/";
-            else art.innerText = "  |\\---/|\n  | o_o |\n   \\_^_/";
+            
+            const artElement = document.getElementById('cat-art');
+            if (bond >= 8) artElement.innerText = catArt.happy;
+            else if (bond > 0) artElement.innerText = catArt.excited;
+            else artElement.innerText = catArt.default;
         };
 
-        const execute = (action) => {
-            audio.currentTime = 0;
-            audio.play().catch(()=>{});
-            action();
-            update();
-        };
-
-        document.getElementById('btnServe').addEventListener('click', () => execute(() => { cash += 2; }));
-        document.getElementById('btnBond').addEventListener('click', () => execute(() => { if(cash > 0) { cash--; bond = Math.min(bond + 1, 10); } }));
-        document.getElementById('btnTrick').addEventListener('click', () => execute(() => { if(bond >= 2) { bond -= 2; tricks++; } }));
-        document.getElementById('btnPerform').addEventListener('click', () => execute(() => { if(tricks > 0) { cash += (tricks * 5); } }));
+        document.getElementById('btnServe').addEventListener('click', () => { playClick(); cash += 2; update(); });
+        document.getElementById('btnBond').addEventListener('click', () => { playClick(); if(cash > 0) { cash--; bond = Math.min(bond + 1, 10); } update(); });
+        document.getElementById('btnTrick').addEventListener('click', () => { playClick(); if(bond >= 2) { bond -= 2; tricks++; } update(); });
+        document.getElementById('btnPerform').addEventListener('click', () => { playClick(); if(tricks > 0) { cash += (tricks * 5); } update(); });
     </script>
 </body>
 </html>
