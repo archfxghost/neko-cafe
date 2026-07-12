@@ -7,6 +7,7 @@
         body { background: #121212; color: #ff69b4; font-family: monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
         .game-box { border: 2px solid #ff69b4; padding: 20px; width: 90%; max-width: 400px; text-align: center; background: #1e1e1e; }
         button { background: #333; color: #fff; border: 1px solid #ff69b4; margin: 10px; padding: 15px; width: 80%; cursor: pointer; font-size: 16px; }
+        #cat-art { font-size: 14px; white-space: pre; }
     </style>
 </head>
 <body>
@@ -27,26 +28,43 @@
 
     <script>
         let cash = 5, bond = 0, tricks = 0;
+        
+        const catArt = {
+            happy: "  |\\---/|\n  | ^_^ |\n   \\_^_/",
+            excited: "  |\\---/|\n  | O_O |\n   \\_^_/",
+            default: "  |\\---/|\n  | o_o |\n   \\_^_/"
+        };
+
+        const playClick = () => {
+            const audio = new Audio('https://actions.google.com/sounds/v1/ui/button_toggle.ogg');
+            audio.play().catch(() => {});
+        };
+
         const update = () => {
             document.getElementById('stats').innerText = `Cash: $${cash} | Bond: ${bond}/10 | Tricks: ${tricks}`;
+            
+            if (bond >= 8) {
+                document.getElementById('cat-art').innerText = catArt.happy;
+            } else if (bond > 0) {
+                document.getElementById('cat-art').innerText = catArt.excited;
+            } else {
+                document.getElementById('cat-art').innerText = catArt.default;
+            }
         };
 
         document.getElementById('btnServe').addEventListener('click', () => { 
-            cash += 2; document.getElementById('message').innerText = "Coffee served! +$2"; update(); 
+            playClick(); cash += 2; document.getElementById('message').innerText = "Coffee served! +$2"; update(); 
         });
-
         document.getElementById('btnBond').addEventListener('click', () => { 
-            if(cash > 0) { cash--; bond = Math.min(bond + 1, 10); document.getElementById('message').innerText = "Bond increased!"; } 
+            playClick(); if(cash > 0) { cash--; bond = Math.min(bond + 1, 10); document.getElementById('message').innerText = "Bond increased!"; } 
             else { document.getElementById('message').innerText = "Broke! Serve coffee!"; } update(); 
         });
-
         document.getElementById('btnTrick').addEventListener('click', () => { 
-            if(bond >= 2) { bond -= 2; tricks++; document.getElementById('message').innerText = "New trick learned!"; } 
+            playClick(); if(bond >= 2) { bond -= 2; tricks++; document.getElementById('message').innerText = "New trick learned!"; } 
             else { document.getElementById('message').innerText = "Need 2 Bond!"; } update(); 
         });
-
         document.getElementById('btnPerform').addEventListener('click', () => { 
-            if(tricks > 0) { cash += (tricks * 5); document.getElementById('message').innerText = "Show time! Earned $" + (tricks * 5); } 
+            playClick(); if(tricks > 0) { cash += (tricks * 5); document.getElementById('message').innerText = "Show time! Earned $" + (tricks * 5); } 
             else { document.getElementById('message').innerText = "No tricks!"; } update(); 
         });
     </script>
