@@ -36,17 +36,31 @@
 
     <script>
         let cash = 5, bond = 0, tricks = 0;
-        const playClick = () => { new Audio('https://actions.google.com/sounds/v1/ui/button_toggle.ogg').play().catch(()=>{}); };
+        
+        const catArt = {
+            happy: "  |\\---/|\n  | ^_^ |\n   \\_^_/",
+            excited: "  |\\---/|\n  | O_O |\n   \\_^_/",
+            default: "  |\\---/|\n  | o_o |\n   \\_^_/"
+        };
+
+        const playClick = () => {
+            const audio = new Audio('https://actions.google.com/sounds/v1/ui/button_toggle.ogg');
+            audio.play().catch(()=>{}); 
+        };
+
         const update = () => {
             if (tricks >= 10) {
                 document.getElementById('message').innerText = "🏆 MASTERY ACHIEVED: You are the Neko Market Maker!";
                 return;
             }
             document.getElementById('stats').innerText = `Cash: $${cash} | Bond: ${bond}/10 | Tricks: ${tricks}`;
-            if (bond >= 8) document.getElementById('cat-art').innerText = "  |\\---/|\n  | ^_^ |\n   \\_^_/";
-            else if (bond > 0) document.getElementById('cat-art').innerText = "  |\\---/|\n  | O_O |\n   \\_^_/";
-            else document.getElementById('cat-art').innerText = "  |\\---/|\n  | o_o |\n   \\_^_/";
+            
+            const artElement = document.getElementById('cat-art');
+            if (bond >= 8) artElement.innerText = catArt.happy;
+            else if (bond > 0) artElement.innerText = catArt.excited;
+            else artElement.innerText = catArt.default;
         };
+
         document.getElementById('btnServe').addEventListener('click', () => { playClick(); cash += 2; update(); });
         document.getElementById('btnBond').addEventListener('click', () => { playClick(); if(cash > 0) { cash--; bond = Math.min(bond + 1, 10); } update(); });
         document.getElementById('btnTrick').addEventListener('click', () => { playClick(); if(bond >= 2) { bond -= 2; tricks++; } update(); });
