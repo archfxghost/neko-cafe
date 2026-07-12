@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Neko-Cafe Pro</title>
+    <style>
+        body { background: #121212; color: #ff69b4; font-family: monospace; text-align: center; }
+        .game-box { border: 2px solid #ff69b4; padding: 20px; width: 80%; margin: auto; }
+        button { background: #333; color: #fff; border: 1px solid #ff69b4; margin: 5px; padding: 10px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="game-box">
+        <h1>🐾 NEKO-CAFE PRO 🐾</h1>
+        <p id="stats">Cash: $5 | Bond: 0/10 | Tricks: 0</p>
+        <p id="message">Welcome to the cafe, Evelyn!</p>
+        <button onclick="serve()">Serve Coffee</button>
+        <button onclick="bond()">Bond with Neko</button>
+        <button onclick="trick()">Teach Trick</button>
+        <button onclick="show()">Performance</button>
+    </div>
+
+    <script>
+        let cash = 5, bond = 0, tricks = 0;
+        function update() {
+            document.getElementById('stats').innerText = `Cash: $${cash} | Bond: ${bond}/10 | Tricks: ${tricks}`;
+        }
+        function serve() { cash += 2; document.getElementById('message').innerText = "Coffee served! +$2"; update(); }
+        function bond() { if(cash > 0) { cash--; bond++; document.getElementById('message').innerText = "Bond increased!"; } update(); }
+        function trick() { if(bond >= 2) { bond-=2; tricks++; document.getElementById('message').innerText = "New trick learned!"; } update(); }
+        function show() { if(tricks > 0) { cash += (tricks * 5); document.getElementById('message').innerText = "Show time! Earned $" + (tricks * 5); } update(); }
+    </script>
+</body>
+</html>
